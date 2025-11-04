@@ -1,13 +1,122 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@import 'material-icons/iconfont/material-icons.css';
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  padding: 0;
+  color: #FFFFFF;
+  background-color: #343D4B;
+  display: flex;
+  flex-direction: row;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.main {
+  display: flex;
+  justify-content: flex-start;
+  margin: 2em;
+}
+
+.intro {
+  position: absolute;
+  /* height: 42em;
+  width: 30em; */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 7em;
+  border-radius: 2em;
+  color: #ffffff;
+  padding: 2em 8em 2em 2em;
+  background: linear-gradient(45deg, #88EBEF, #535BE6);
+  z-index: 1;
+}
+
+.describe-container {
+  position: relative;
+  background-color: #222831;
+  border-radius: 2em;
+  color: #ffffff;
+  z-index: -1;
+  padding: 2em 2em 2em 28em;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.details-container {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5em;
+}
+
+.describing-container {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.choosedDay {
+  background-color: #FFFFFF;
+  border-radius: 0.6em;
+  padding: 0.5em 0.8em 0.5em 0.8em;
+}
+
+.regular {
+  background-color: #272E37;
+  padding: 0.5em 0.8em 0.5em 0.8em;
+  border-radius: 0.6em;
+}
+
+.forecast {
+  display: flex;
+  gap: 0.25em;
+  padding: 5em 0 4em 0;
+}
+.forecast_day{
+  background-color: #272E37;
+  border-radius: 0.625em;
+}
+
+.location_btn {
+  display: flex;
+  gap: 0.5em;
+  align-items: center;
+  background-color: #FFFFFF;
+  color: #5460E6;
+  border-radius: 0.6em;
+  padding: 0.6em 6em 0.6em 6em;
+  background: linear-gradient(45deg, #90D9EE, #5460E6);
+}
+
+.modal{
+  position: relative; 
+  margin: 10em 38em;
+}
+.getAweather{
+  position: absolute;
+  background-color: #90D9EE;
+  border-radius: 1em;
+  display: flex;
+  flex-direction: column;
+  gap:2em;
+  padding: 5em;
+}
+.coordinates{
+  display:flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 1em;
+}
+.coordinates input{
+border: 2em #5460E6 ;
+ height: 2.5em;
+ width:18.75em ;
+}
+.weather_btn{
+  padding: 2em;
+  border: 4em none;
+  background:linear-gradient(45deg, #90D9EE, #5460E6) ;
 }
