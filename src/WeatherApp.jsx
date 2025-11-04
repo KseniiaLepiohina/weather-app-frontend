@@ -5,27 +5,33 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 export default function WeatherApp() {
   const { state } = useLocation();
   const navigate = useNavigate();
-  const { lat, lng, cityname,countryCode } = state || {}; // координати з location.state
+  const { lat, lng, cityname, countryCode } = state || {}; // дані з location.state
 
   const [data, setData] = useState(null);
   const [forecastData, setForecastData] = useState(null);
-  
+
+  // --- якщо є координати ---
   useEffect(() => {
     if (lat && lng) {
       axios
         .get(`http://localhost:5000/weather-data/getWeatherDataByLocation?lat=${lat}&lng=${lng}`)
         .then((res) => setData(res.data))
-        .catch((error) => alert('Failed to fetch data', error));
+        .catch(() => alert('Failed to fetch data'));
     }
   }, [lat, lng]);
 
+  // --- прогноз по координатах ---
   useEffect(() => {
-    axios.get(`http://localhost:5000/weather-data/getWeatherForecastByLocation?lat=${lat}&lng=${lng}`)
-      .then((res) => setForecastData(res.data))
-      .catch((error) => alert('Forecast data not found', error))
-  }, [lat, lng])
+    if (lat && lng) {
+      axios
+        .get(`http://localhost:5000/weather-data/getWeatherForecastByLocation?lat=${lat}&lng=${lng}`)
+        .then((res) => setForecastData(res.data))
+        .catch(() => alert('Forecast data not found'));
+    }
+  }, [lat, lng]);
 
- useEffect(() => {
+  // --- якщо є city + code ---
+  useEffect(() => {
     if (cityname && countryCode) {
       axios
         .get(`http://localhost:5000/weather-data/getWeatherByCity?cityName=${cityname}&countryCode=${countryCode}`)
@@ -33,30 +39,38 @@ export default function WeatherApp() {
         .catch(() => alert('City name was not found'));
     }
   }, [cityname, countryCode]);
+//--прогноз погоди по city+code--
+useEffect(() => {
+    if (cityname && countryCode) {
+      axios
+        .get(`http://localhost:5000/weather-data/forecastByCityName?cityName=${cityname}&countryCode=${countryCode}`)
+        .then((res) => setForecastData(res.data))
+        .catch(() => alert('forecast by city was not found'));
+    }
+  }, [cityname, countryCode]);
 
-  if (!lat || !lng || cityname ||countryCode) {
-    // якщо координат нема — повертаємось на форму
-    navigate('/');
-    return null;
-  }
+  // --- якщо взагалі нічого не передано ---
+  useEffect(() => {
+    if (!lat && !lng && !cityname && !countryCode) {
+      navigate('/');
+    }
+  }, [lat, lng, cityname, countryCode, navigate]);
 
-  if (!data) {
-    return <h2>Loading...</h2>;
-  }
-  const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday',];
+  if (!data) return <h2>Loading...</h2>;
+
+  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
   return (
     <section className="main">
       <section className="intro">
         <section className="details">
-          <h2>{days[new Date(data.dt).getDay()]}</h2>
+          <h2>{days[new Date(data.dt * 1000).getDay()]}</h2>
           {new Date(data.dt * 1000).toLocaleDateString('en-US', {
             day: 'numeric',
             month: 'short',
             year: 'numeric'
           })}
           <section className="details-container">
-
             <h3>{data.name}</h3>,
             <h3>{data.sys.country}</h3>
           </section>
@@ -68,19 +82,21 @@ export default function WeatherApp() {
               src={`http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`}
               alt={data.weather[0].description}
             />
-          </span><section className="details">
+          </span>
+          <section className="details">
             <strong>
-              <h3>{data.weather[0].main}</h3></strong>
+              <h3>{data.weather[0].main}</h3>
+            </strong>
             <section className="describing-container">
-              <strong><h2>{Math.round(data.main.temp)}°C</h2></strong>
+              <strong>
+                <h2>{Math.round(data.main.temp)}°C</h2>
+              </strong>
             </section>
-
           </section>
         </section>
       </section>
 
       <section className="describe-container">
-
         <section className="describing-container">
           <h2>HUMIDITY</h2>
           <h2>{data.main.humidity}%</h2>
@@ -93,12 +109,10 @@ export default function WeatherApp() {
         {forecastData && (
           <section className="forecast">
             {forecastData?.list
-              ?.filter((_, index) => index % 8 === 0) // 8 записів ≈ 1 день
-              ?.slice(0, 4) // тільки 4 дні
+              ?.filter((_, index) => index % 8 === 0)
+              ?.slice(0, 4)
               ?.map((forecast, index) => (
-                <section
-                  className="forecast_day"
-                  key={index}>
+                <section className="forecast_day" key={index}>
                   <img
                     src={`http://openweathermap.org/img/wn/${forecast.weather[0].icon}@2x.png`}
                     alt={forecast.weather[0].description}
@@ -109,12 +123,12 @@ export default function WeatherApp() {
               ))}
           </section>
         )}
-        <Link to='/'>
+
+        <Link to="/">
           <button className="location_btn" onClick={() => navigate('/')}>
             <h2>Change Location</h2>
           </button>
         </Link>
-
       </section>
     </section>
   );
