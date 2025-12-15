@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from "react";
 import axios from 'axios';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function WeatherApp() {
   const { state } = useLocation();
   const navigate = useNavigate();
-  const { lat, lng, cityname, countryCode } = state || {}; // дані з location.state
+  const { lat, lng, cityname, countryCode } = state || {};
 
   const [data, setData] = useState(null);
   const [forecastData, setForecastData] = useState(null);
 
-  // --- якщо є координати ---
   useEffect(() => {
     if (lat && lng) {
       axios
@@ -20,7 +19,6 @@ export default function WeatherApp() {
     }
   }, [lat, lng]);
 
-  // --- прогноз по координатах ---
   useEffect(() => {
     if (lat && lng) {
       axios
@@ -30,7 +28,6 @@ export default function WeatherApp() {
     }
   }, [lat, lng]);
 
-  // --- якщо є city + code ---
   useEffect(() => {
     if (cityname && countryCode) {
       axios
@@ -39,8 +36,8 @@ export default function WeatherApp() {
         .catch(() => alert('City name was not found'));
     }
   }, [cityname, countryCode]);
-//--прогноз погоди по city+code--
-useEffect(() => {
+
+  useEffect(() => {
     if (cityname && countryCode) {
       axios
         .get(`http://localhost:5000/weather-data/forecastByCityName?cityName=${cityname}&countryCode=${countryCode}`)
@@ -48,13 +45,6 @@ useEffect(() => {
         .catch(() => alert('forecast by city was not found'));
     }
   }, [cityname, countryCode]);
-
-  // --- якщо взагалі нічого не передано ---
-  useEffect(() => {
-    if (!lat && !lng && !cityname && !countryCode) {
-      navigate('/');
-    }
-  }, [lat, lng, cityname, countryCode, navigate]);
 
   if (!data) return <h2>Loading...</h2>;
 
@@ -106,7 +96,7 @@ useEffect(() => {
           <h2>{data.wind.speed} m/s</h2>
         </section>
 
-        {forecastData && (
+          {forecastData && (
           <section className="forecast">
             {forecastData?.list
               ?.filter((_, index) => index % 8 === 0)
@@ -121,14 +111,19 @@ useEffect(() => {
                   <h2>{Math.round(forecast.main.temp)}°C</h2>
                 </section>
               ))}
+              
           </section>
         )}
+        <section>
 
-        <Link to="/">
-          <button className="location_btn" onClick={() => navigate('/')}>
-            <h2>Change Location</h2>
-          </button>
-        </Link>
+              <button
+          type="button"
+          className="location_btn"
+          onClick={() => navigate('/', { replace: true })}
+        >
+          <h2>Change Location</h2>
+        </button>
+        </section>
       </section>
     </section>
   );

@@ -13,13 +13,12 @@ body {
 .main {
   display: flex;
   justify-content: flex-start;
+  align-items: center;
   margin: 2em;
 }
 
 .intro {
   position: absolute;
-  /* height: 42em;
-  width: 30em; */
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -36,7 +35,6 @@ body {
   background-color: #222831;
   border-radius: 2em;
   color: #ffffff;
-  z-index: -1;
   padding: 2em 2em 2em 28em;
 }
 
@@ -93,7 +91,7 @@ body {
 
 .modal{
   position: relative; 
-  margin: 10em 38em;
+  margin: 10em 36em;
 }
 .getAweather{
   position: absolute;
@@ -101,8 +99,8 @@ body {
   border-radius: 1em;
   display: flex;
   flex-direction: column;
-  gap:2em;
-  padding: 5em;
+  gap:0.4em;
+  padding: 2em;
 }
 .coordinates{
   display:flex;
@@ -117,6 +115,33 @@ border: 2em #5460E6 ;
 }
 .weather_btn{
   padding: 2em;
-  border: 4em none;
+  border-radius: 4em ;
   background:linear-gradient(45deg, #90D9EE, #5460E6) ;
+}
+
+@media screen and  (max-width:768px) {
+  .main{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .intro{
+    gap:2em ;
+    display: flex;
+    flex-direction: row;
+  }
+  .describing-container{
+    justify-content: space-around;
+  }
+  .describing-container {
+font-size:1.2rem;
+
+  }
+  .forecast{
+    padding: 0;
+    flex-direction: column;
+  }
+  .describe-container{
+    padding: 24em 8em 2em 6em;
+  }
 }
