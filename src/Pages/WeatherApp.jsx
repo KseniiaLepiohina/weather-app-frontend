@@ -10,10 +10,12 @@ export default function WeatherApp() {
   const [data, setData] = useState(null);
   const [forecastData, setForecastData] = useState(null);
 
+  const api = process.env.API
+
   useEffect(() => {
     if (lat && lng) {
       axios
-        .get(`http://localhost:5000/weather-data/getWeatherDataByLocation?lat=${lat}&lng=${lng}`)
+        .get(`${API}/weather-data/getWeatherDataByLocation?lat=${lat}&lng=${lng}`)
         .then((res) => setData(res.data))
         .catch(() => alert('Failed to fetch data'));
     }
@@ -22,7 +24,7 @@ export default function WeatherApp() {
   useEffect(() => {
     if (lat && lng) {
       axios
-        .get(`http://localhost:5000/weather-data/getWeatherForecastByLocation?lat=${lat}&lng=${lng}`)
+        .get(`${API}/weather-data/getWeatherForecastByLocation?lat=${lat}&lng=${lng}`)
         .then((res) => setForecastData(res.data))
         .catch(() => alert('Forecast data not found'));
     }
@@ -31,7 +33,7 @@ export default function WeatherApp() {
   useEffect(() => {
     if (cityname && countryCode) {
       axios
-        .get(`http://localhost:5000/weather-data/getWeatherByCity?cityName=${cityname}&countryCode=${countryCode}`)
+        .get(`${API}/weather-data/getWeatherByCity?cityName=${cityname}&countryCode=${countryCode}`)
         .then((res) => setData(res.data))
         .catch(() => alert('City name was not found'));
     }
@@ -40,7 +42,7 @@ export default function WeatherApp() {
   useEffect(() => {
     if (cityname && countryCode) {
       axios
-        .get(`http://localhost:5000/weather-data/forecastByCityName?cityName=${cityname}&countryCode=${countryCode}`)
+        .get(`${API}/weather-data/forecastByCityName?cityName=${cityname}&countryCode=${countryCode}`)
         .then((res) => setForecastData(res.data))
         .catch(() => alert('forecast by city was not found'));
     }

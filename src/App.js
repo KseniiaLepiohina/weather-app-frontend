@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes,Route } from 'react-router-dom';
 import './App.css';
-import WeatherApp from './WeatherApp.jsx';
-import GetCoordinates from './promtWindow.jsx';
+import WeatherApp from '../src/Pages/WeatherApp.jsx';
+import GetCoordinates from '../src/Pages/promtWindow.jsx';
 
 function App() {
   return (

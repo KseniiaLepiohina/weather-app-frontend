@@ -55,7 +55,6 @@ export default function GetCoordinates() {
 
         <span className='divider'><h3>OR</h3></span>
 
-        {/* --- Варіант 2: city + code --- */}
         <section className='coordinates'>
         <label htmlFor="city-input">
           City (enter as <b>City,CountryCode</b>)
