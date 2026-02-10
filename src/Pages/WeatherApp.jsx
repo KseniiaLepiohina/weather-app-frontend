@@ -89,7 +89,7 @@ export default function WeatherApp() {
           <h2>{data.wind.speed} m/s</h2>
         </section>
 
-        {forecastData && (
+          {forecastData && (
           <section className="forecast">
             {forecastData.list
               ?.filter((_, index) => index % 8 === 0)
@@ -104,6 +104,7 @@ export default function WeatherApp() {
                   <h2>{Math.round(forecast.main.temp)}°C</h2>
                 </section>
               ))}
+              
           </section>
         )}
         
