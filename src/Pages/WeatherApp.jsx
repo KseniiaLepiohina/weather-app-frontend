@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import axios from 'axios';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import api from '../service/api'; 
 
 export default function WeatherApp() {
   const { state } = useLocation();
@@ -9,46 +9,38 @@ export default function WeatherApp() {
 
   const [data, setData] = useState(null);
   const [forecastData, setForecastData] = useState(null);
-
-  const api = process.env.API
-
-  useEffect(() => {
-    if (lat && lng) {
-      axios
-        .get(`${API}/weather-data/getWeatherDataByLocation?lat=${lat}&lng=${lng}`)
-        .then((res) => setData(res.data))
-        .catch(() => alert('Failed to fetch data'));
-    }
-  }, [lat, lng]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (lat && lng) {
-      axios
-        .get(`${API}/weather-data/getWeatherForecastByLocation?lat=${lat}&lng=${lng}`)
-        .then((res) => setForecastData(res.data))
-        .catch(() => alert('Forecast data not found'));
-    }
-  }, [lat, lng]);
+    const fetchAllData = async () => {
+      setLoading(true);
+      try {
+        let weatherRes, forecastRes;
 
-  useEffect(() => {
-    if (cityname && countryCode) {
-      axios
-        .get(`${API}/weather-data/getWeatherByCity?cityName=${cityname}&countryCode=${countryCode}`)
-        .then((res) => setData(res.data))
-        .catch(() => alert('City name was not found'));
-    }
-  }, [cityname, countryCode]);
+        if (lat && lng) {
+          weatherRes = await api.get(`/weather-data/getWeatherDataByLocation?lat=${lat}&lng=${lng}`);
+          forecastRes = await api.get(`/weather-data/getWeatherForecastByLocation?lat=${lat}&lng=${lng}`);
+        } else if (cityname) {
+          weatherRes = await api.get(`/weather-data/getWeatherByCity?cityName=${cityname}&countryCode=${countryCode || ''}`);
+          forecastRes = await api.get(`/weather-data/forecastByCityName?cityName=${cityname}&countryCode=${countryCode || ''}`);
+        }
 
-  useEffect(() => {
-    if (cityname && countryCode) {
-      axios
-        .get(`${API}/weather-data/forecastByCityName?cityName=${cityname}&countryCode=${countryCode}`)
-        .then((res) => setForecastData(res.data))
-        .catch(() => alert('forecast by city was not found'));
-    }
-  }, [cityname, countryCode]);
+        if (weatherRes) setData(weatherRes.data);
+        if (forecastRes) setForecastData(forecastRes.data);
+        
+      } catch (error) {
+        console.error(error);
+        alert('Failed to fetch weather data. Please try again.');
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  if (!data) return <h2>Loading...</h2>;
+    fetchAllData();
+  }, [lat, lng, cityname, countryCode]); 
+
+  if (loading) return <h2>Loading...</h2>;
+  if (!data) return <h2>No data available. Go back and try again.</h2>;
 
   const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
@@ -63,8 +55,7 @@ export default function WeatherApp() {
             year: 'numeric'
           })}
           <section className="details-container">
-            <h3>{data.name}</h3>,
-            <h3>{data.sys.country}</h3>
+            <h3>{data.name}</h3>, <h3>{data.sys?.country}</h3>
           </section>
         </section>
 
@@ -98,12 +89,12 @@ export default function WeatherApp() {
           <h2>{data.wind.speed} m/s</h2>
         </section>
 
-          {forecastData && (
+        {forecastData && (
           <section className="forecast">
-            {forecastData?.list
+            {forecastData.list
               ?.filter((_, index) => index % 8 === 0)
-              ?.slice(0, 4)
-              ?.map((forecast, index) => (
+              .slice(0, 4)
+              .map((forecast, index) => (
                 <section className="forecast_day" key={index}>
                   <img
                     src={`http://openweathermap.org/img/wn/${forecast.weather[0].icon}@2x.png`}
@@ -113,19 +104,16 @@ export default function WeatherApp() {
                   <h2>{Math.round(forecast.main.temp)}°C</h2>
                 </section>
               ))}
-              
           </section>
         )}
-        <section>
-
-              <button
+        
+        <button
           type="button"
           className="location_btn"
           onClick={() => navigate('/', { replace: true })}
         >
           <h2>Change Location</h2>
         </button>
-        </section>
       </section>
     </section>
   );

@@ -8,23 +8,22 @@ export default function GetCoordinates() {
   const [countryCode, setCountryCode] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // якщо заповнені координати
-    if (lat && lng) {
+    try{
+      if (lat && lng) {
       navigate('/weather', { state: { lat, lng } });
       return;
     }
-
-    // якщо заповнено city + country
     if (cityname && countryCode) {
       navigate('/weather', { state: { cityname, countryCode } });
       return;
     }
-
-    // якщо нічого не заповнено
+    }catch(error) {
     alert('Please enter coordinates or a city name (e.g. London,GB)');
+
+    }
   };
 
   return (
@@ -32,7 +31,6 @@ export default function GetCoordinates() {
       <form className='getAweather' onSubmit={handleSubmit}>
         <h2>Find Weather</h2>
 
-        {/* --- Варіант 1: координати --- */}
         <section className='coordinates'>
           <label htmlFor='lat'>Latitude</label>
           <input
