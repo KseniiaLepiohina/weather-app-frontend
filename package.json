@@ -1,9 +1,6 @@
 {
   "name": "frontend",
-<<<<<<< HEAD
-=======
-  "homapage": "https://github.com/KseniiaLepiohina.io/weatherapp",
->>>>>>> 6d7449966fa1acae941971531575f45bb33515fa
+  "homepage": "https://weather-app-one-steel-71.vercel.app",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
